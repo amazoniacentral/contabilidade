@@ -1,0 +1,12 @@
+services:
+  contabilidade-dev:
+    build: .
+    container_name: contabilidade-dev
+    command: npm run dev
+    env_file:
+      - .env 
+    ports:
+      - "3002:3000"
+    volumes:
+      - .:/code
+      - /code/node_modules
