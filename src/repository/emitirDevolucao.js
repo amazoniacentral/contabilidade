@@ -63,4 +63,5 @@ const emitirNotaDevolucao = async (regimeEmpresa = 'SIMPLES') => {
   }
 };
 
-emitirNotaDevolucao('SIMPLES');
+//emitirNotaDevolucao('SIMPLES');
+module.exports = { emitirNotaDevolucao };

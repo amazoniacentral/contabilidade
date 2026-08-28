@@ -28,4 +28,6 @@ const cancelarNotaFiscal = async () => {
   }
 };
 
-cancelarNotaFiscal();
+//cancelarNotaFiscal();
+module.exports = { cancelarNotaFiscal };
+

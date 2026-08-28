@@ -79,4 +79,6 @@ const emitirNotaFiscal = async (regimeEmpresa = 'SIMPLES') => {
   }
 };
 
-emitirNotaFiscal('SIMPLES');
+//emitirNotaFiscal('SIMPLES');
+
+module.exports = { emitirNotaFiscal };

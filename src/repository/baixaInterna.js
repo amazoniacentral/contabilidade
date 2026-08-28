@@ -60,4 +60,6 @@ const emitirNotaInterna = async (regimeEmpresa = 'SIMPLES') => {
   }
 };
 
-emitirNotaInterna('SIMPLES');
+//emitirNotaInterna('SIMPLES');
+
+module.exports = { emitirNotaInterna };
