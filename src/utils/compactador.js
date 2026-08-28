@@ -25,34 +25,43 @@ async function gerarZipContabilidade(dadosDoMes) {
         // Conecta o arquivador ao stream de saída
         archive.pipe(output);
           
-        // 1. Adicionar Extratos Bancários na pasta correspondente
+        // 1. Extratos Bancários
         if (dadosDoMes.extratos && dadosDoMes.extratos.length > 0) {
-            dadosDoMes.extratos.forEach(extratoPath => {
-                if (fs.existsSync(extratoPath)) {
-                    archive.file(extratoPath, { name: `1_Extratos_Bancarios/${path.basename(extratoPath)}` });
+            dadosDoMes.extratos.forEach(filePath => {
+                if (fs.existsSync(filePath)) {
+                    archive.file(filePath, { name: `1_Extratos_Bancarios/${path.basename(filePath)}` });
                 }
             });
         }
           
-        // 2. Adicionar Notas Fiscais de Saída (Vendas)
+        // 2. Notas Fiscais de Saída (Vendas da empresa - XML ou PDF)
         if (dadosDoMes.nfsSaida && dadosDoMes.nfsSaida.length > 0) {
-            dadosDoMes.nfsSaida.forEach(xmlPath => {
-                if (fs.existsSync(xmlPath)) {
-                    archive.file(xmlPath, { name: `2_Notas_Fiscais_Saida/${path.basename(xmlPath)}` });
+            dadosDoMes.nfsSaida.forEach(filePath => {
+                if (fs.existsSync(filePath)) {
+                    archive.file(filePath, { name: `2_Notas_Fiscais_Saida/${path.basename(filePath)}` });
                 }
             });
         }
           
-        // 3. Adicionar Notas Fiscais de Compra
-        if (dadosDoMes.nfsCompras && dadosDoMes.nfsCompras.length > 0) {
-            dadosDoMes.nfsCompras.forEach(xmlPath => {
-                if (fs.existsSync(xmlPath)) {
-                    archive.file(xmlPath, { name: `3_Notas_Fiscais_Compras/${path.basename(xmlPath)}` });
+        // 3. Notas de Compras / Aquisição de Mercadorias (XML ou PDF/Nota Impressa de Fornecedores)
+        if (dadosDoMes.comprasMercadorias && dadosDoMes.comprasMercadorias.length > 0) {
+            dadosDoMes.comprasMercadorias.forEach(filePath => {
+                if (fs.existsSync(filePath)) {
+                    archive.file(filePath, { name: `3_Notas_Compras_Mercadorias/${path.basename(filePath)}` });
+                }
+            });
+        }
+
+        // 4. Despesas Operacionais e Recibos (Água, luz, aluguel, frete, recibos sem NF, etc.)
+        if (dadosDoMes.despesasOperacionais && dadosDoMes.despesasOperacionais.length > 0) {
+            dadosDoMes.despesasOperacionais.forEach(filePath => {
+                if (fs.existsSync(filePath)) {
+                    archive.file(filePath, { name: `4_Despesas_Operacionais/${path.basename(filePath)}` });
                 }
             });
         }
           
-        // 4. Adicionar o Relatório de Fechamento gerado pelo sistema
+        // 5. Relatório de Fechamento gerado pelo sistema (Excel / PDF)
         if (dadosDoMes.relatorioBaixasPath && fs.existsSync(dadosDoMes.relatorioBaixasPath)) {
             const nomeRelatorio = path.basename(dadosDoMes.relatorioBaixasPath);
             archive.file(dadosDoMes.relatorioBaixasPath, { name: nomeRelatorio });
@@ -68,15 +77,21 @@ const dadosExemplo = {
     mes: "08",
     ano: "2026",
     extratos: [
-        path.join(__dirname, 'temp_uploads/extrato_nubank.ofx'),
-        path.join(__dirname, 'temp_uploads/extrato_openpix.ofx')
+        path.join(__dirname, 'temp_uploads/extrato_nubank.ofx')
     ],
     nfsSaida: [
-        path.join(__dirname, 'temp_uploads/nf_123.xml'),
-        path.join(__dirname, 'temp_uploads/nf_124.xml')
+        path.join(__dirname, 'temp_uploads/nf_venda_123.xml')
     ],
-    nfsCompras: [
-        path.join(__dirname, 'temp_uploads/compra_fornecedor.xml')
+    // Aqui entram as compras de mercadoria para revenda (seja XML de compra ou a nota de papel que o fornecedor mandou digitalizada em PDF)
+    comprasMercadorias: [
+        path.join(__dirname, 'temp_uploads/xml_compra_fornecedor_principal.xml'),
+        path.join(__dirname, 'temp_uploads/nota_compra_papel_digitalizada.pdf')
+    ],
+    // Aqui entram as despesas do negócio (contas de consumo, aluguel, recibos de frete, comprovantes de pix)
+    despesasOperacionais: [
+        path.join(__dirname, 'temp_uploads/conta_luz.pdf'),
+        path.join(__dirname, 'temp_uploads/recibo_frete_manual.jpg'),
+        path.join(__dirname, 'temp_uploads/comprovante_pix_limpeza.png')
     ],
     relatorioBaixasPath: path.join(__dirname, 'temp_uploads/fechamento_contabil.pdf')
 };
