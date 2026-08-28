@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const emitirNotaBaixaMostruario = async (regimeEmpresa = 'SIMPLES') => {
+const emitirNotaMostruario = async (regimeEmpresa = 'SIMPLES') => {
   try {
     const regime = regimeEmpresa.toUpperCase();
     let icmsProduto = { "origem": 0 };
@@ -60,4 +60,4 @@ const emitirNotaBaixaMostruario = async (regimeEmpresa = 'SIMPLES') => {
   }
 };
 
-emitirNotaBaixaMostruario('SIMPLES');
+emitirNotaMostruario('SIMPLES');
